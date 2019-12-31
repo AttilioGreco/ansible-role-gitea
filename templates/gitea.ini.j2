@@ -144,16 +144,38 @@ SENDMAIL_PATH = sendmail
 ; Specify any extra sendmail arguments
 SENDMAIL_ARGS =
 
+[cache]
+; Either "memory", "redis", or "memcache", default is "memory"
+ADAPTER = redis
+; For "memory" only, GC interval in seconds, default is 60
+INTERVAL = 60
+; For "redis" and "memcache", connection host address
+; redis: network=tcp,addr=127.0.0.1:6379
+; memcache: `127.0.0.1:11211`
+HOST = network=tcp,addr=:6379,db=0,pool_size=100,idle_timeout=180
+; Time to keep items in cache if not used, default is 16 hours.
+; Setting it to 0 disables caching
+ITEM_TTL = 16h
 
 [session]
 ; Either "memory", "file", or "redis", default is "memory"
-PROVIDER = file
+PROVIDER = redis
 ; Provider config options
 ; memory: doesn't have any config yet
 ; file: session file path, e.g. `data/sessions`
-; redis: network=tcp,addr=:6379,password=macaron,db=0,pool_size=100,idle_timeout=180
+; redis           = network=tcp,addr=:6379,db=0,pool_size=100,idle_timeout=180
 ; mysql: go-sql-driver/mysql dsn config string, e.g. `root:password@/session_table`
-PROVIDER_CONFIG         = {{ gitea_home }}/data/sessions
+PROVIDER_CONFIG = network=tcp,addr=:6379,db=0,pool_size=100,idle_timeout=180
+
+[session]
+; Either "memory", "file", or "redis", default is "memory"
+PROVIDER = redis
+; Provider config options
+; memory: doesn't have any config yet
+; file: session file path, e.g. `data/sessions`
+; redis: network=tcp,addr=127.0.0.1:6379
+; mysql: go-sql-driver/mysql dsn config string, e.g. `root:password@/session_table`
+PROVIDER_CONFIG         = network=tcp,addr=:6379,db=0,pool_size=100,idle_timeout=180
 
 [picture]
 AVATAR_UPLOAD_PATH      = {{ gitea_home }}/data/avatars
